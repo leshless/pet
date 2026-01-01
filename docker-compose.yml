@@ -1,0 +1,13 @@
+services:
+  cub:
+    build:
+      context: ./
+      dockerfile: ./cub/Dockerfile
+      tags:
+        - cub:latest
+    image: cub:latest
+    restart: no
+    env_file:
+      - ./cub/config/development.env
+    volumes:
+      - "./cub/config/development.yml:/etc/cub/config.yml:ro"

@@ -1,0 +1,19 @@
+logger:
+  development: true
+  stdout_only: true
+  output_file: "/dev/null"
+  
+  max_file_size_mb: 1
+  max_backups_amount: 1
+  max_file_age_days: 1
+  compression: false
+  
+  time_key: "timestamp"
+  level_key: "level"
+  name_key: ""
+  caller_key: ""
+  message_key: "message"
+  stacktrace_key: ""
+  
+  service: "cub"
+  environment: "development"

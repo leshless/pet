@@ -1,0 +1,14 @@
+# Ignore everything without extension (binaries), except some special cases                 │
+*                                                                                           │
+!*.*                                                                                        │
+!*/                                                                                         │
+!Makefile                                                                                   │
+!Dockerfile 
+!LICENSE
+
+# Go generated files
+*.gen.go
+*.pb.go
+
+# Sensitive files
+*.env
