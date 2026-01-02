@@ -25,13 +25,19 @@ type Dependencies struct {
 	ConfigHolder        config.Holder
 	EnvironmentHolder   environment.Holder
 	Logger              telemetry.Logger
+	Telemetry           telemetry.Telemetry
 }
+
+// @PublicValueInstance
+type Clients struct{}
 
 // @PublicValueInstance
 type Adapters struct{}
 
 // @PublicValueInstance
-type Usecases struct{}
+type Usecases struct {
+	CheckHealth health
+}
 
 // @PublicValueInstance
 type Actions struct{}

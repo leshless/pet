@@ -16,7 +16,7 @@ type App struct {
 }
 
 func (app *App) Run() error {
-	app.Logger.Info("app startup initiated")
+	app.Logger.Info("starting app")
 
 	var wg sync.WaitGroup
 

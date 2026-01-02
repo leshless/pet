@@ -22,6 +22,11 @@
             "name": "constructor",
             "file_pattern": "*.go",
             "command": "go run github.com/leshless/golibrary/constructor_generator"
+        },
+        {
+            "name": "enum",
+            "file_pattern": "*.go",
+            "command": "go run github.com/leshless/golibrary/enum_generator"
         }
     ]
 }

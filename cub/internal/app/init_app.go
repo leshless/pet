@@ -20,6 +20,7 @@ func InitApp(primitives Primitives) (*App, error) {
 
 	providePrimitives(c, primitives)
 	provideDependencies(c)
+	provideClients(c)
 	provideAdapters(c)
 	provideUsecases(c)
 	provideActions(c)
@@ -65,6 +66,7 @@ func provideDependencies(c *dig.Container) {
 	c.Provide(config.InitHolder, dig.As(new(config.Holder)))
 	c.Provide(environment.InitHolder, dig.As(new(environment.Holder)))
 	c.Provide(telemetry.InitLogger, dig.As(new(telemetry.Logger)))
+	c.Provide(telemetry.NewTelemetry)
 
 	c.Provide(NewDependencies)
 }
@@ -72,6 +74,11 @@ func provideDependencies(c *dig.Container) {
 func provideAdapters(c *dig.Container) {
 
 	c.Provide(NewAdapters)
+}
+
+func provideClients(c *dig.Container) {
+
+	c.Provide(NewClients)
 }
 
 func provideUsecases(c *dig.Container) {
@@ -85,6 +92,7 @@ func provideActions(c *dig.Container) {
 }
 
 func provideHandlers(c *dig.Container) {
+	c.Provide()
 
 	c.Provide(NewHandlers)
 }
