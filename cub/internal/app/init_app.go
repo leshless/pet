@@ -11,8 +11,12 @@ import (
 	"github.com/leshless/golibrary/stupid"
 	"github.com/leshless/pet/cub/internal/config"
 	"github.com/leshless/pet/cub/internal/environment"
+	"github.com/leshless/pet/cub/internal/grpc"
+	healthgrpc "github.com/leshless/pet/cub/internal/grpc/health"
+	healthlogic "github.com/leshless/pet/cub/internal/logic/health"
 	"github.com/leshless/pet/cub/internal/telemetry"
 	"go.uber.org/dig"
+	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 )
 
 func InitApp(primitives Primitives) (*App, error) {
@@ -82,6 +86,7 @@ func provideClients(c *dig.Container) {
 }
 
 func provideUsecases(c *dig.Container) {
+	c.Provide(healthlogic.NewCheckUseCase, dig.As(new(healthlogic.CheckUseCase)))
 
 	c.Provide(NewUsecases)
 }
@@ -92,12 +97,13 @@ func provideActions(c *dig.Container) {
 }
 
 func provideHandlers(c *dig.Container) {
-	c.Provide()
+	c.Provide(healthgrpc.NewHandler, dig.As(new(healthpb.HealthServer)))
 
 	c.Provide(NewHandlers)
 }
 
 func providePorts(c *dig.Container) {
+	c.Provide(grpc.InitPort, dig.As(new(grpc.Port)))
 
 	c.Provide(NewPorts)
 }

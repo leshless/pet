@@ -6,10 +6,11 @@ require (
 	github.com/benbjohnson/clock v1.3.5
 	github.com/caarlos0/env/v11 v11.3.1
 	github.com/go-playground/validator/v10 v10.30.1
-	github.com/leshless/golibrary v0.1.10
+	github.com/leshless/golibrary v0.1.11
 	go.uber.org/dig v1.19.0
 	go.uber.org/zap v1.27.1
 	go.yaml.in/yaml/v3 v3.0.4
+	golang.org/x/sync v0.19.0
 	google.golang.org/grpc v1.78.0
 	gopkg.in/lumberjack.v2 v2.0.0
 )

@@ -27,7 +27,7 @@ func InitHolder() (*holder, error) {
 	}
 
 	if err := validator.New().Struct(environment); err != nil {
-		return nil, fmt.Errorf("Environment are invalid: %w", err)
+		return nil, fmt.Errorf("Environment is invalid: %w", err)
 	}
 
 	return NewHolder(&environment), nil

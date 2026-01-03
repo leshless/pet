@@ -11,3 +11,5 @@ services:
       - ./cub/config/development.env
     volumes:
       - "./cub/config/development.yml:/etc/cub/config.yml:ro"
+    ports:
+      - "50051:50051"

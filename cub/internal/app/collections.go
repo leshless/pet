@@ -8,7 +8,10 @@ import (
 	"github.com/leshless/golibrary/interrupt"
 	"github.com/leshless/pet/cub/internal/config"
 	"github.com/leshless/pet/cub/internal/environment"
+	"github.com/leshless/pet/cub/internal/grpc"
+	healthlogic "github.com/leshless/pet/cub/internal/logic/health"
 	"github.com/leshless/pet/cub/internal/telemetry"
+	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 )
 
 // @PublicValueInstance
@@ -36,14 +39,18 @@ type Adapters struct{}
 
 // @PublicValueInstance
 type Usecases struct {
-	CheckHealth health
+	CheckHealth healthlogic.CheckUseCase
 }
 
 // @PublicValueInstance
 type Actions struct{}
 
 // @PublicValueInstance
-type Handlers struct{}
+type Handlers struct {
+	HealthGRPC healthpb.HealthServer
+}
 
 // @PublicValueInstance
-type Ports struct{}
+type Ports struct {
+	GRPC grpc.Port
+}

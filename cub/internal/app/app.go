@@ -1,7 +1,10 @@
 package app
 
 import (
-	"sync"
+	"fmt"
+
+	"github.com/leshless/pet/cub/internal/telemetry"
+	"golang.org/x/sync/errgroup"
 )
 
 // @PublicValueInstance
@@ -18,16 +21,21 @@ type App struct {
 func (app *App) Run() error {
 	app.Logger.Info("starting app")
 
-	var wg sync.WaitGroup
+	ctx := app.Interrupter.Context()
 
-	wg.Add(1)
-	go func() {
-		<-app.Interrupter.Context().Done()
+	var eg errgroup.Group
 
-		defer wg.Done()
-	}()
+	eg.Go(func() error {
+		return app.GRPC.Run(ctx)
+	})
 
-	wg.Wait()
+	err := eg.Wait()
+	if err != nil {
+		app.Logger.Error("app stopped with error", telemetry.Error(err))
+		return fmt.Errorf("stopping app: %w", err)
+	}
+
+	app.Logger.Info("app successfully stopped")
 
 	return nil
 }

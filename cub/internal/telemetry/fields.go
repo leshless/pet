@@ -6,10 +6,14 @@ import (
 )
 
 var (
+	ErrorKey = "error"
+
 	ServiceKey     = "service"
-	VersionKey     = "version"
 	HostKey        = "host"
 	EnvironmentKey = "environment"
+
+	CallKey   = "call"
+	MethodKey = "method"
 )
 
 // @PublicValueInstance
@@ -22,10 +26,6 @@ func Service(value string) Field {
 	return NewField(ServiceKey, value)
 }
 
-func Version(value string) Field {
-	return NewField(VersionKey, value)
-}
-
 func Host(value string) Field {
 	return NewField(HostKey, value)
 }
@@ -34,12 +34,20 @@ func Environment(value string) Field {
 	return NewField(EnvironmentKey, value)
 }
 
-func Any(key string, value any) Field {
-	return NewField(key, value)
+func Call(value string) Field {
+	return NewField(CallKey, value)
+}
+
+func Method(value string) Field {
+	return NewField(MethodKey, value)
 }
 
 func Error(value error) Field {
-	return NewField("", value)
+	return NewField(ErrorKey, value)
+}
+
+func Any(key string, value any) Field {
+	return NewField(key, value)
 }
 
 func fieldsToZap(fields []Field) []zap.Field {

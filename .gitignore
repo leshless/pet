@@ -1,4 +1,4 @@
-# Ignore everything without extension (binaries), except some special cases                 │
+# Everything without extension (binaries), except some cases
 *                                                                                           │
 !*.*                                                                                        │
 !*/                                                                                         │
@@ -6,9 +6,13 @@
 !Dockerfile 
 !LICENSE
 
-# Go generated files
+# Go codegen
 *.gen.go
 *.pb.go
+.generators_cache
 
 # Sensitive files
 *.env
+
+# Logs
+*.log

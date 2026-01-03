@@ -18,6 +18,7 @@ func InitLogger(
 	gracefulRegistrator graceful.Registrator,
 ) (*logger, error) {
 	config := configHolder.Config().Logger
+	serviceConfig := configHolder.Config().Service
 	environment := environmentHolder.Environment()
 
 	encoderConfig := zapcore.EncoderConfig{
@@ -68,10 +69,9 @@ func InitLogger(
 	)
 
 	baseFields := []Field{
-		Service(config.Service),
-		Environment(config.Environment),
+		Service(serviceConfig.Name),
+		Environment(serviceConfig.Environment),
 		Host(environment.HostName),
-		Version(environment.Version),
 	}
 
 	zapLogger := zap.New(core, zap.Fields(fieldsToZap(baseFields)...))

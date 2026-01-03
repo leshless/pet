@@ -1,3 +1,7 @@
+service:
+  name: "cub"
+  environment: "development"
+
 logger:
   development: true
   stdout_only: true
@@ -14,6 +18,26 @@ logger:
   caller_key: ""
   message_key: "message"
   stacktrace_key: ""
+
+grpc:
+  host: "0.0.0.0"
+  port: 50051
+
+  enable_tls: false
   
-  service: "cub"
-  environment: "development"
+  enable_health: true
+  enable_reflection: true
+  
+  keepalive_max_connection_idle: 5m
+  keepalive_max_connection_age: 30m
+  keepalive_max_connection_age_grace: 10s
+  keepalive_time: 2h
+  keepalive_timeout: 30s
+  
+  keepalive_min_time: 10s
+  keepalive_permit_without_stream: true 
+  
+  max_receive_message_size_mb: 16
+  max_send_message_size_mb: 16
+
+  timeout: 5m
