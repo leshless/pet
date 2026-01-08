@@ -1,0 +1,64 @@
+openapi: 3.0.3
+info:
+  title: Cub API
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:80
+    description: Local development environment
+
+tags:
+  - name: Health
+    description: Service healthchecks
+
+paths:
+  /health:
+    get:
+      tags:
+        - Health
+      summary: Basic service healthcheck
+      description: |
+      operationId: CheckHealth
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+               $ref: "#/components/schemas/CheckHealthResponse"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+    Error:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          description: Human readable protected error message
+          example: "Internal server error"
+
+    HealthStatus:
+      type: string
+      enum:
+        - UNKNOWN
+        - SERVING
+        - NOT_SERVING
+      example: SERVING
+      description: Service health status
+
+
+    CheckHealthResponse:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          $ref: '#/components/schemas/HealthStatus'

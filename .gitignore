@@ -13,6 +13,7 @@
 
 # Sensitive files
 *.env
+!template.env
 
 # Logs
 *.log

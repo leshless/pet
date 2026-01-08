@@ -24,21 +24,23 @@ type port struct {
 var _ Port = (*port)(nil)
 
 func (p *port) Run(ctx context.Context) error {
-	p.Logger.Info("starting grpc server")
+	p.Logger.Info(ctx, "starting grpc server")
 
 	config := p.configHolder.Config().GRPC
 
 	lis, err := net.Listen("tcp", fmt.Sprintf("%s:%d", config.Host, config.Port))
 	if err != nil {
-		p.Logger.Error("failed to start grpc server", telemetry.Error(err))
+		p.Logger.Error(ctx, "failed to start grpc server", telemetry.Error(err))
 
 		return fmt.Errorf("starting grpc server: %w", err)
 	}
 
 	err = p.grpcServer.Serve(lis)
 	if err != nil {
-		return fmt.Errorf("grpc server finished with error: %w", err)
+		return fmt.Errorf("grpc server stopped with error: %w", err)
 	}
+
+	p.Logger.Warn(ctx, "grpc server stopped")
 
 	return nil
 }

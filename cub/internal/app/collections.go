@@ -6,10 +6,15 @@ import (
 	"github.com/benbjohnson/clock"
 	"github.com/leshless/golibrary/graceful"
 	"github.com/leshless/golibrary/interrupt"
+	cubpb "github.com/leshless/pet/cub/api/grpc/v1"
 	"github.com/leshless/pet/cub/internal/config"
+	"github.com/leshless/pet/cub/internal/db"
 	"github.com/leshless/pet/cub/internal/environment"
 	"github.com/leshless/pet/cub/internal/grpc"
+	"github.com/leshless/pet/cub/internal/http"
+	"github.com/leshless/pet/cub/internal/job"
 	healthlogic "github.com/leshless/pet/cub/internal/logic/health"
+	"github.com/leshless/pet/cub/internal/state"
 	"github.com/leshless/pet/cub/internal/telemetry"
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 )
@@ -28,18 +33,28 @@ type Dependencies struct {
 	ConfigHolder        config.Holder
 	EnvironmentHolder   environment.Holder
 	Logger              telemetry.Logger
+	Registry            telemetry.Registry
 	Telemetry           telemetry.Telemetry
 }
 
 // @PublicValueInstance
-type Clients struct{}
+type Clients struct {
+	DB db.Client
+}
 
 // @PublicValueInstance
-type Adapters struct{}
+type Adapters struct {
+	// DB
+	PingDB      db.PingAdapter
+	TXDB        db.TxAdapter
+	MigrationDB db.MigrationAdapter
+	// State
+	HealthState state.HealthAdapter
+}
 
 // @PublicValueInstance
-type Usecases struct {
-	CheckHealth healthlogic.CheckUseCase
+type Controllers struct {
+	Health healthlogic.Controller
 }
 
 // @PublicValueInstance
@@ -47,10 +62,18 @@ type Actions struct{}
 
 // @PublicValueInstance
 type Handlers struct {
+	// GRPC
 	HealthGRPC healthpb.HealthServer
+	PingGRPC   cubpb.PingServer
+	// HTTP
+	HealthHTTP *http.HealthHandler
+	// Jobs
+	UpdateHealthStatusJob job.UpdateHealthStatus
 }
 
 // @PublicValueInstance
 type Ports struct {
 	GRPC grpc.Port
+	HTTP http.Port
+	Job  job.Port
 }

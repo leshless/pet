@@ -1,6 +1,7 @@
 package app
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/leshless/pet/cub/internal/telemetry"
@@ -12,14 +13,14 @@ type App struct {
 	Primitives
 	Dependencies
 	Adapters
-	Usecases
+	Controllers
 	Actions
 	Handlers
 	Ports
 }
 
 func (app *App) Run() error {
-	app.Logger.Info("starting app")
+	app.Logger.Info(context.Background(), "starting app")
 
 	ctx := app.Interrupter.Context()
 
@@ -28,14 +29,20 @@ func (app *App) Run() error {
 	eg.Go(func() error {
 		return app.GRPC.Run(ctx)
 	})
+	eg.Go(func() error {
+		return app.HTTP.Run(ctx)
+	})
+	eg.Go(func() error {
+		return app.Job.Run(ctx)
+	})
 
 	err := eg.Wait()
 	if err != nil {
-		app.Logger.Error("app stopped with error", telemetry.Error(err))
+		app.Logger.Error(context.Background(), "app stopped with error", telemetry.Error(err))
 		return fmt.Errorf("stopping app: %w", err)
 	}
 
-	app.Logger.Info("app successfully stopped")
+	app.Logger.Info(context.Background(), "app successfully stopped")
 
 	return nil
 }

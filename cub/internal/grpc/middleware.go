@@ -2,28 +2,83 @@ package grpc
 
 import (
 	"context"
+	"time"
 
+	"github.com/benbjohnson/clock"
+	"github.com/leshless/pet/cub/internal/model"
 	"github.com/leshless/pet/cub/internal/telemetry"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/status"
 )
 
-func telemetryMiddleware(tel telemetry.Telemetry) grpc.UnaryServerInterceptor {
+func recoveryMiddleware(tel telemetry.Telemetry) grpc.UnaryServerInterceptor {
 	return func(
 		ctx context.Context,
 		req any,
 		info *grpc.UnaryServerInfo,
 		handler grpc.UnaryHandler,
 	) (resp any, err error) {
-		logger := tel.Logger.With(telemetry.Call(info.FullMethod))
+		defer func() {
+			if r := recover(); r != nil {
+				tel.Logger.Error(ctx, "caught panic in unary grpc call", telemetry.Any("panic_value", r))
+				err = errorFromModel(model.NewInternalError())
+			}
+		}()
 
-		tel.Logger.Info("recieved unary gRPC call")
+		return handler(ctx, req)
+	}
+}
+
+func errorMiddleware() grpc.UnaryServerInterceptor {
+	return func(
+		ctx context.Context,
+		req any,
+		info *grpc.UnaryServerInfo,
+		handler grpc.UnaryHandler,
+	) (resp any, err error) {
+		response, err := handler(ctx, req)
+		if err != nil {
+			return nil, errorFromModel(err)
+		}
+
+		return response, nil
+	}
+}
+
+func telemetryMiddleware(clock clock.Clock, tel telemetry.Telemetry) grpc.UnaryServerInterceptor {
+	return func(
+		ctx context.Context,
+		req any,
+		info *grpc.UnaryServerInfo,
+		handler grpc.UnaryHandler,
+	) (resp any, err error) {
+		ts := clock.Now()
+
+		ctx = telemetry.ContextWith(ctx, telemetry.Call(info.FullMethod))
+
+		tel.Logger.Info(ctx, "recieved unary grpc call")
 
 		response, err := handler(ctx, req)
 
+		latency := time.Since(ts)
+
+		ctx = telemetry.ContextWith(
+			ctx,
+			telemetry.Status(status.Code(err).String()),
+			telemetry.Any("latency", latency),
+		)
+
+		tel.Registry.Counter(ctx, telemetry.GRPCCallsTotal).Inc()
+		tel.Registry.Summary(ctx, telemetry.GRPCCallDurationSeconds).Observe(latency.Seconds())
+
 		if err != nil {
-			logger.Error("processed GRPC call with error", telemetry.Error(err))
+			tel.Logger.Warn(
+				ctx,
+				"processed unary grpc call with error",
+				telemetry.Error(err),
+			)
 		} else {
-			logger.Info("sucessfully processed unary GRPC call")
+			tel.Logger.Info(ctx, "sucessfully processed unary grpc call")
 		}
 
 		return response, err
