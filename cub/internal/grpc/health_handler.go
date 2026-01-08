@@ -3,7 +3,7 @@ package grpc
 import (
 	"context"
 
-	healthlogic "github.com/leshless/pet/cub/internal/logic/health"
+	"github.com/leshless/pet/cub/internal/logic/health"
 	"github.com/leshless/pet/cub/internal/model"
 	"github.com/leshless/pet/cub/internal/telemetry"
 	"google.golang.org/grpc"
@@ -13,7 +13,7 @@ import (
 // @PublicPointerInstance
 type healthHandler struct {
 	telemetry.Telemetry
-	controller healthlogic.Controller
+	controller health.Controller
 }
 
 var _ healthpb.HealthServer = (*healthHandler)(nil)

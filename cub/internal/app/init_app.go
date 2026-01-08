@@ -17,7 +17,7 @@ import (
 	"github.com/leshless/pet/cub/internal/grpc"
 	"github.com/leshless/pet/cub/internal/http"
 	"github.com/leshless/pet/cub/internal/job"
-	healthlogic "github.com/leshless/pet/cub/internal/logic/health"
+	"github.com/leshless/pet/cub/internal/logic/health"
 	"github.com/leshless/pet/cub/internal/state"
 	"github.com/leshless/pet/cub/internal/telemetry"
 	"go.uber.org/dig"
@@ -53,7 +53,6 @@ func InitApp(primitives Primitives) (*App, error) {
 	c.Provide(db.NewQueries)
 	c.Provide(db.NewPingAdapter, dig.As(new(db.PingAdapter)))
 	c.Provide(db.NewTxAdapter, dig.As(new(db.TxAdapter)))
-	c.Provide(db.NewMigrationAdapter, dig.As(new(db.MigrationAdapter)))
 
 	// State Adapters
 	c.Provide(state.NewHealthAdapter, dig.As(new(state.HealthAdapter)))
@@ -63,7 +62,7 @@ func InitApp(primitives Primitives) (*App, error) {
 
 	// Controllers
 	c.Provide(NewControllers)
-	c.Provide(healthlogic.NewController, dig.As(new(healthlogic.Controller)))
+	c.Provide(health.NewController, dig.As(new(health.Controller)))
 
 	// Handlers
 	c.Provide(NewHandlers)

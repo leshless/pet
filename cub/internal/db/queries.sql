@@ -1,3 +1,2 @@
--- name: SelectAllMigrations :many
-SELECT * FROM migration
-ORDER BY version ASC;
+-- name: SelectAllObjects :many
+SELECT * FROM objects;

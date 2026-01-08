@@ -55,10 +55,13 @@ http:
 db:
   host: "cub_postgres"
   port: 5432
+
   user: "user"
   password: "password"
   database: "cub"
   ssl_mode: "disable"
+
+  migrations_table_name: "migrations"
 
 jobs:
   - name: "update_health_status"
@@ -70,12 +73,16 @@ monitoring:
   counters:
     - name: "http_requests_total"
       labels: ["method", "endpoint", "status_code"]
+    
     - name: "grpc_calls_total"
       labels: ["call", "status"]
+    
     - name: "executed_jobs_total"
       labels: ["job_name", "successful"]
+    
     - name: "db_requests_total"
       labels: ["successful"]
+
   summaries:
     - name: "http_request_duration_seconds"
       labels: ["method", "endpoint"]
@@ -85,6 +92,7 @@ monitoring:
         0.99: 0.01
       max_age: 10m
       age_buckets: 3
+
     - name: "grpc_call_duration_seconds"
       labels: ["call"]
       objectives:
@@ -93,6 +101,7 @@ monitoring:
         0.99: 0.01
       max_age: 10m
       age_buckets: 3
+    
     - name: "job_duration_seconds"
       labels: ["job_name"]
       objectives:

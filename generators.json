@@ -35,7 +35,7 @@
         },
         {
             "name": "sqlc",
-            "file_patterns": ["*.sql", "sqlc.yml"],
+            "file_patterns": ["schema.sql", "queries.sql", "sqlc.yml"],
             "command": "go run github.com/sqlc-dev/sqlc/cmd/sqlc generate"
         },
         {

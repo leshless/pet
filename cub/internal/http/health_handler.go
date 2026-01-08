@@ -4,14 +4,14 @@ import (
 	"context"
 
 	api "github.com/leshless/pet/cub/api/http/v1"
-	healthlogic "github.com/leshless/pet/cub/internal/logic/health"
+	"github.com/leshless/pet/cub/internal/logic/health"
 	"github.com/leshless/pet/cub/internal/telemetry"
 )
 
 // @PublicPointerInstance
 type HealthHandler struct {
 	telemetry.Telemetry
-	controller healthlogic.Controller
+	controller health.Controller
 }
 
 func (h *HealthHandler) CheckHealth(ctx context.Context, req api.CheckHealthRequestObject) (api.CheckHealthResponseObject, error) {

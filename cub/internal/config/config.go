@@ -63,13 +63,15 @@ type HTTP struct {
 }
 
 type DB struct {
-	Host     string `yaml:"host" validate:"required"`
-	Port     uint   `yaml:"port" validate:"port"`
+	Host string `yaml:"host" validate:"required"`
+	Port uint   `yaml:"port" validate:"port"`
+
 	User     string `yaml:"user" validate:"required"`
 	Password string `yaml:"password" validate:"required"`
 	Database string `yaml:"database" validate:"required"`
 	SSLMode  string `yaml:"ssl_mode" validate:"oneof=disable require verify-ca verify-full"`
 
+	MigrationsTableName string `yaml:"migrations_table_name" validate:"required"`
 	// TODO: Connection pool settings
 }
 

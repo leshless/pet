@@ -13,7 +13,7 @@ import (
 	"github.com/leshless/pet/cub/internal/grpc"
 	"github.com/leshless/pet/cub/internal/http"
 	"github.com/leshless/pet/cub/internal/job"
-	healthlogic "github.com/leshless/pet/cub/internal/logic/health"
+	"github.com/leshless/pet/cub/internal/logic/health"
 	"github.com/leshless/pet/cub/internal/state"
 	"github.com/leshless/pet/cub/internal/telemetry"
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"
@@ -45,16 +45,15 @@ type Clients struct {
 // @PublicValueInstance
 type Adapters struct {
 	// DB
-	PingDB      db.PingAdapter
-	TXDB        db.TxAdapter
-	MigrationDB db.MigrationAdapter
+	PingDB db.PingAdapter
+	TXDB   db.TxAdapter
 	// State
 	HealthState state.HealthAdapter
 }
 
 // @PublicValueInstance
 type Controllers struct {
-	Health healthlogic.Controller
+	Health health.Controller
 }
 
 // @PublicValueInstance
